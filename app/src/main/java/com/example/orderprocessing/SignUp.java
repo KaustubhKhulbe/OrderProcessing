@@ -17,12 +17,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
-
-
+public class SignUp extends AppCompatActivity {
     // Input fields
     private static TextView name, password;
-    private static Button signIn, signUp;
+    private static Button signUp;
 
     //Database fields
     private FirebaseAuth mAuth;
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up);
         initializeInputFields();
         initalizeFirebaseFields();
     }
@@ -43,49 +41,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeInputFields() {
-        name = (TextView)findViewById(R.id.Name);
-        password = (TextView)findViewById(R.id.Password);
-        signIn = (Button)findViewById(R.id.SignIn);
-        signUp = (Button)findViewById(R.id.signUp);
+        name = (TextView)findViewById(R.id.nameNew);
+        password = (TextView)findViewById(R.id.passwordNew);
+        signUp = (Button)findViewById(R.id.signUpNew);
 
         setOnClickListeners();
 
     }
 
     private void setOnClickListeners() {
-        signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signUserIn();
-            }
-        });
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignUp.class);
-                startActivity(intent);
+                createUser(name.getText().toString(), password.getText().toString());
+
             }
         });
     }
 
-    private void signUserIn() {
-        mAuth.signInWithEmailAndPassword(name.getText().toString(), password.getText().toString())
+    private void createUser(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(MainActivity.this, SuccessfulyLogedIn.class);
+                            Log.d(TAG, "createUserWithEmail:success");
+                            //FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent(SignUp.this, SuccesfullySignedUp.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(SignUp.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
                         }
+
+                        // ...
                     }
                 });
     }
+
 }
