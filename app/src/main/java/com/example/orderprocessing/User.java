@@ -20,4 +20,20 @@ public class User {
 
     }
 
+    public void setEmail(String email){
+        this.username = email;
+    }
+
+    public String getEmail(){
+        return username;
+    }
+
+    public void setIsCustomer(Boolean isCustomer){
+        this.isCustomer = isCustomer;
+    }
+
+    public Boolean getIsCustomer(){
+        return isCustomer;
+    }
+
 }
